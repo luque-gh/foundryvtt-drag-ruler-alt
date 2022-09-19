@@ -1,0 +1,18 @@
+{
+    "id": "movement-ruler",
+    "title": "Movement Ruler - Because a can't wait for Drag Ruler!",
+    "description": "A module created to measure the cost of movement actor.",
+    "authors": [
+      {
+      "name": "Luque"
+      }
+      ],
+    "scripts": [
+        "scripts/main.js"
+    ],
+    "version": "0.1.0-alpha",
+    "compatibility": {
+      "minimum": "10",
+      "verified": "10"
+    }
+  }

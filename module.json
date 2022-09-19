@@ -1,18 +1,30 @@
 {
-    "id": "movement-ruler",
-    "title": "Movement Ruler - Because a can't wait for Drag Ruler!",
-    "description": "A module created to measure the cost of movement actor.",
-    "authors": [
-      {
+  "id": "movement-ruler",
+  "title": "Movement Ruler - Because a can't wait for Drag Ruler!",
+  "description": "A module created to measure the cost of movement actor.",
+  "authors": [
+    {
       "name": "Luque"
-      }
-      ],
-    "scripts": [
-        "scripts/main.js"
-    ],
-    "version": "0.1.0-alpha",
-    "compatibility": {
-      "minimum": "10",
-      "verified": "10"
     }
+  ],
+  "scripts": [
+    "scripts/main.js"
+  ],
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10"
+  },
+  "relationships": {
+    "requires": [
+      {
+        "id": "lib-wrapper",
+        "type": "module",
+        "compatibility": {
+          "minimum": "1.0.0.0",
+          "verified": "1.12.6.0"
+        }
+      }
+    ]
   }
+}

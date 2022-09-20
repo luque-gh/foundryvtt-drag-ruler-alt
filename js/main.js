@@ -1,4 +1,4 @@
-import { walkOrthogonalSquareGrid } from "./util.js";
+import { walkOrthogonalSquareGrid, walkSquareGrid } from "./util.js";
 
 var waypointArray;
 var lastCoord;
@@ -27,7 +27,7 @@ Hooks.on("init", function () {
         if (lastCoord.x != dest.x || lastCoord.y != dest.y) {
             lastCoord.x = dest.x;
             lastCoord.y = dest.y;
-            let pathArray = walkOrthogonalSquareGrid(origin, dest);
+            let pathArray = walkSquareGrid(origin, dest);
             await buildGrid(pathArray);
         }
     }

@@ -47,6 +47,14 @@ Hooks.on("init", function () {
    }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "WRAPPER");
+
+    let onDragLeftCancel = async function(wrapped, ...args) {
+        wrapped(...args);
+        waypointArray = [];
+        await clearGrid();
+    }
+
+    libWrapper.register("movement-ruler", "Token.prototype._onDragLeftCancel", onDragLeftCancel, "WRAPPER");    
 });
 
 Hooks.once("ready", function () {

@@ -9,7 +9,7 @@ Hooks.on("init", function () {
     let onDragLeftStart = async function (wrapped, ...args) {
         wrapped(...args);
         let data = args[0].data;
-        console.log("Drag Left Start", data.origin);
+        //console.log("Drag Left Start", data.origin);
         waypointArray = [];
         gridArrayHistory = [];
         let origin = canvas.grid.getSnappedPosition(data.origin.x - canvas.grid.grid.w / 2, data.origin.y - canvas.grid.grid.h / 2);
@@ -39,9 +39,9 @@ Hooks.on("init", function () {
         
         //let mouse = canvas.app.renderer.plugins.interaction.mouse;
         //let local = mouse.getLocalPosition(canvas.app.stage);
-        console.log("Drag Left Drop", args[0]);
+        //console.log("Drag Left Drop", args[0]);
         //console.log(game);
-        console.log(canvas.grid);
+        //console.log(canvas.grid);
         waypointArray = [];
         await clearGrid();
    }

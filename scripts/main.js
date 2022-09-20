@@ -14,7 +14,9 @@ Hooks.on("init", function () {
     let onDragLeftMove = async function (wrapped, ...args) {
         wrapped(...args);
         let data = args[0].data;
+        let origin = canvas.grid.getSnappedPosition(data.origin.x - canvas.grid.grid.w / 2, data.origin.y - canvas.grid.grid.h / 2);
         let dest = canvas.grid.getSnappedPosition(data.destination.x - canvas.grid.grid.w / 2, data.destination.y - canvas.grid.grid.h / 2);
+        let distance = Math.trunc(canvas.grid.measureDistance(origin, dest));
         let key = JSON.stringify(dest);
         if (!coordMap.has(key)) {
             //Insert key with temporary value
@@ -29,6 +31,8 @@ Hooks.on("init", function () {
                         strokeWidth: 0,
                         fillType: 1,
                         fillAlpha: 0.4,
+                        fontSize: 20,
+                        text: distance,
                         shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
                     }]
                 );
@@ -49,14 +53,10 @@ Hooks.on("init", function () {
 
         //let mouse = canvas.app.renderer.plugins.interaction.mouse;
         //let local = mouse.getLocalPosition(canvas.app.stage);
-        let data = args[0].data;
         console.log("Drag Left Drop", args[0]);
         //let local = data.getLocalPosition(canvas.app.stage);
         //console.log(game);
         console.log(canvas.grid);
-        let originSnapped = canvas.grid.getSnappedPosition(data.origin.x - canvas.grid.grid.w / 2, data.origin.y - canvas.grid.grid.h / 2);
-        let destSnapped = canvas.grid.getSnappedPosition(data.destination.x - canvas.grid.grid.w / 2, data.destination.y - canvas.grid.grid.h / 2);
-        console.log("Grid MeasureDistance", canvas.grid.measureDistance(originSnapped, destSnapped));
     }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "WRAPPER");

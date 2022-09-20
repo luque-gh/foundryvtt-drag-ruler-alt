@@ -55,8 +55,9 @@ Hooks.once("ready", function () {
 });
 
 let clearGrid = async () => {
-    await canvas.scene.deleteEmbeddedDocuments('Drawing', gridArray);
+    let previousGridArray = [...gridArray];
     gridArray = [];
+    await canvas.scene.deleteEmbeddedDocuments('Drawing', previousGridArray);
 }
 
 let buildGrid = async (pathArray) => {

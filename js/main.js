@@ -28,7 +28,6 @@ Hooks.on("init", function () {
             lastCoord.x = dest.x;
             lastCoord.y = dest.y;
             let pathArray = walkOrthogonalSquareGrid(origin, dest);
-            await clearGrid();
             await buildGrid(pathArray);
         }
     }
@@ -61,23 +60,24 @@ let clearGrid = async () => {
 }
 
 let buildGrid = async (pathArray) => {
+    clearGrid();
+    let gridData = [];
     for (var i = 0; i < pathArray.length; i++) {
         let path = pathArray[i];
-        let square = await canvas.scene.createEmbeddedDocuments(
-            'Drawing', 
-            [
-                {
-                    x: path.x,
-                    y: path.y,
-                    fillColor: "#FF0000",
-                    strokeWidth: 0,
-                    fillType: 1,
-                    fillAlpha: 0.4,
-                    fontSize: 20,
-                    text: (i + 1) * 5,
-                    shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
-                }]
-            );
-            gridArray.push(square[0].id);
+        gridData.push({
+            x: path.x,
+            y: path.y,
+            fillColor: "#FF0000",
+            strokeWidth: 0,
+            fillType: 1,
+            fillAlpha: 0.4,
+            fontSize: 20,
+            text: (i + 1) * 5,
+            shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
+        });
+    }
+    let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
+    for (var j = 0; j < square.length; j++) {
+        gridArray.push(square[j].id);
     }
 }

@@ -1,5 +1,8 @@
+var coordMap;
+
 Hooks.on("init", function () {
     //CONFIG.debug.hooks = true
+    coordMap = new Map();
     let onDragLeftStart = async function (wrapped, ...args) {
         wrapped(...args);
         let data = args[0].data;
@@ -11,26 +14,45 @@ Hooks.on("init", function () {
     let onDragLeftMove = async function (wrapped, ...args) {
         wrapped(...args);
         let data = args[0].data;
-        //console.log("Drag Left Move", data.destination);
-        console.log(canvas.grid.getSnappedPosition(data.destination.x, data.destination.y));
+        let dest = canvas.grid.getSnappedPosition(data.destination.x, data.destination.y);
+        let key = JSON.stringify(dest);
+        if (!coordMap.has(key)) {
+            //Insert key with temporary value
+            coordMap.set(key, '');
+            let square = await canvas.scene.createEmbeddedDocuments(
+                'Drawing', 
+                [
+                    {
+                        x: dest.x,
+                        y: dest.y,
+                        shape: {width: 50, height: 50, type: CONST.DRAWING_TYPES.RECTANGLE}
+                    }]
+                );
+            //Insert final value
+            coordMap.set(key, square[0].id);
+        }
     }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftMove", onDragLeftMove, "WRAPPER");
 
     let onDragLeftDrop = async function (wrapped, ...args) {
         wrapped(...args);
-        let data = args[0].data;
-        let local = data.getLocalPosition(canvas.app.stage);
+        
+        const values = Array.from(coordMap.values());
+        console.log(values);
+        canvas.scene.deleteEmbeddedDocuments('Drawing', values);
+        coordMap = new Map();
+
         //let mouse = canvas.app.renderer.plugins.interaction.mouse;
         //let local = mouse.getLocalPosition(canvas.app.stage);
+        let data = args[0].data;
         console.log("Drag Left Drop", args[0]);
+        let local = data.getLocalPosition(canvas.app.stage);
+        //console.log(game);
+        //console.log(canvas);
         let originSnapped = canvas.grid.getSnappedPosition(data.origin.x, data.origin.y);
         let destSnapped = canvas.grid.getSnappedPosition(local.x, local.y);
         console.log("Grid MeasureDistance", canvas.grid.measureDistance(originSnapped, destSnapped));
-        //console.log(game);
-        //console.log(canvas);
-        let square = await canvas.scene.createEmbeddedDocuments('Drawing', [{x: originSnapped.x, y: originSnapped.y, shape: {width: 50, height: 50, type: CONST.DRAWING_TYPES.RECTANGLE}}]);
-        console.log(square);
     }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "WRAPPER");

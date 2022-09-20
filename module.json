@@ -9,12 +9,13 @@
   ],
   "esmodules": [
     "js/main.js",
-    "js/util.js"
+    "js/util.js",
+    "js/squaregrid.js"
   ],
   "version": "0.0.1",
   "compatibility": {
     "minimum": "10",
-    "verified": "10.285"
+    "verified": "10.286"
   },
   "relationships": {
     "requires": [
@@ -23,7 +24,7 @@
         "type": "module",
         "compatibility": {
           "minimum": "1.0.0.0",
-          "verified": "1.12.6.0"
+          "verified": "1.12.10.0"
         }
       }
     ]

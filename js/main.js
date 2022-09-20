@@ -1,8 +1,8 @@
 import { walkOrthogonalSquareGrid, walkSquareGrid } from "./util.js";
+import { clearGrid, buildGrid } from "./squaregrid.js"
 
 var waypointArray;
 var lastCoord;
-var gridArrayHistory;
 
 Hooks.on("init", function () {
     //CONFIG.debug.hooks = true
@@ -11,7 +11,6 @@ Hooks.on("init", function () {
         let data = args[0].data;
         //console.log("Drag Left Start", data.origin);
         waypointArray = [];
-        gridArrayHistory = [];
         let origin = canvas.grid.getSnappedPosition(data.origin.x - canvas.grid.grid.w / 2, data.origin.y - canvas.grid.grid.h / 2);
         waypointArray.push({x: origin.x, y: origin.y});
         lastCoord = {x: origin.x, y: origin.y};
@@ -58,39 +57,5 @@ Hooks.on("init", function () {
 });
 
 Hooks.once("ready", function () {
-    console.log("This code runs once core initialization is ready and game data is available.");
+    //nothing to do
 });
-
-let clearGrid = async () => {
-    let gridArrayToDelete = [...gridArrayHistory];
-    gridArrayHistory = [];
-    for (var i = 0; i < gridArrayToDelete.length; i++) {
-        canvas.scene.deleteEmbeddedDocuments('Drawing', gridArrayToDelete[i]);
-    }
-}
-
-let buildGrid = async (pathArray) => {
-    let gridData = [];
-    for (var i = 0; i < pathArray.length; i++) {
-        let path = pathArray[i];
-        gridData.push({
-            x: path.x,
-            y: path.y,
-            fillColor: "#FF0000",
-            strokeWidth: 0,
-            fillType: 1,
-            fillAlpha: 0.4,
-            fontSize: canvas.grid.grid.w / 3,
-            text: (i + 1) * canvas.scene.grid.distance + canvas.scene.grid.units,
-            shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
-        });
-    }
-    let localGridArray = [];
-    let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
-    for (var j = 0; j < square.length; j++) {
-        localGridArray.push(square[j].id);
-    }
-    await clearGrid();
-    //Update Grid Array History
-    gridArrayHistory.push(localGridArray);
-}

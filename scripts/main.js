@@ -25,6 +25,10 @@ Hooks.on("init", function () {
                     {
                         x: dest.x,
                         y: dest.y,
+                        fillColor: "#FF0000",
+                        strokeWidth: 0,
+                        fillType: 1,
+                        fillAlpha: 0.4,
                         shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
                     }]
                 );

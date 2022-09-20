@@ -7,8 +7,9 @@
       "name": "LuqueGh"
     }
   ],
-  "scripts": [
-    "scripts/main.js"
+  "esmodules": [
+    "js/main.js",
+    "js/util.js"
   ],
   "version": "0.0.1",
   "compatibility": {

@@ -1,3 +1,5 @@
+import { walkSquareGrid } from "./util.js";
+
 var coordMap;
 
 Hooks.on("init", function () {
@@ -38,6 +40,7 @@ Hooks.on("init", function () {
                 );
             //Insert final value
             coordMap.set(key, square[0].id);
+            console.log(walkSquareGrid(origin, dest));
         }
     }
 

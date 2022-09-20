@@ -1,10 +1,10 @@
 {
   "id": "movement-ruler",
-  "title": "Movement Ruler - Because a can't wait for Drag Ruler!",
+  "title": "Movement Ruler - Because token speed matters!",
   "description": "A module created to measure the cost of movement actor.",
   "authors": [
     {
-      "name": "Luque"
+      "name": "LuqueGh"
     }
   ],
   "scripts": [
@@ -13,7 +13,7 @@
   "version": "0.0.1",
   "compatibility": {
     "minimum": "10",
-    "verified": "10"
+    "verified": "10.285"
   },
   "relationships": {
     "requires": [

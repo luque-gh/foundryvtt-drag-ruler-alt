@@ -24,6 +24,10 @@ Hooks.on("init", function () {
         let originSnapped = canvas.grid.getSnappedPosition(data.origin.x, data.origin.y);
         let destSnapped = canvas.grid.getSnappedPosition(data.destination.x, data.destination.y);
         console.log("Grid MeasureDistance", canvas.grid.measureDistance(originSnapped, destSnapped));
+        //console.log(game);
+        console.log(canvas);
+        let square = await canvas.scene.createEmbeddedDocuments('Drawing', [{x: destSnapped.x, y: destSnapped.y, shape: {width: 50, height: 50, type: CONST.DRAWING_TYPES.RECTANGLE}}]);
+        console.log(square);
     }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "WRAPPER");

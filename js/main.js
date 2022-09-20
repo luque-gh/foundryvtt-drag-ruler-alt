@@ -41,7 +41,7 @@ Hooks.on("init", function () {
         //let local = mouse.getLocalPosition(canvas.app.stage);
         //console.log("Drag Left Drop", args[0]);
         //console.log(game);
-        //console.log(canvas.grid);
+        //console.log(canvas.scene);
         waypointArray = [];
         await clearGrid();
    }
@@ -74,7 +74,7 @@ let buildGrid = async (pathArray) => {
             fillType: 1,
             fillAlpha: 0.4,
             fontSize: 20,
-            text: (i + 1) * 5,
+            text: (i + 1) * canvas.scene.grid.distance + canvas.scene.grid.units,
             shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
         });
     }

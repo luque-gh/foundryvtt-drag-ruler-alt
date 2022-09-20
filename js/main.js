@@ -1,8 +1,8 @@
 import { walkOrthogonalSquareGrid } from "./util.js";
 
 var waypointArray;
-var gridArray;
 var lastCoord;
+var gridArrayHistory;
 
 Hooks.on("init", function () {
     //CONFIG.debug.hooks = true
@@ -11,7 +11,7 @@ Hooks.on("init", function () {
         let data = args[0].data;
         console.log("Drag Left Start", data.origin);
         waypointArray = [];
-        gridArray = [];
+        gridArrayHistory = [];
         let origin = canvas.grid.getSnappedPosition(data.origin.x - canvas.grid.grid.w / 2, data.origin.y - canvas.grid.grid.h / 2);
         waypointArray.push({x: origin.x, y: origin.y});
         lastCoord = {x: origin.x, y: origin.y};
@@ -54,9 +54,11 @@ Hooks.once("ready", function () {
 });
 
 let clearGrid = async () => {
-    let previousGridArray = [...gridArray];
-    gridArray = [];
-    await canvas.scene.deleteEmbeddedDocuments('Drawing', previousGridArray);
+    let gridArrayToDelete = [...gridArrayHistory];
+    gridArrayHistory = [];
+    for (var i = 0; i < gridArrayToDelete.length; i++) {
+        canvas.scene.deleteEmbeddedDocuments('Drawing', gridArrayToDelete[i]);
+    }
 }
 
 let buildGrid = async (pathArray) => {
@@ -76,8 +78,11 @@ let buildGrid = async (pathArray) => {
             shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
         });
     }
+    let localGridArray = [];
     let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
     for (var j = 0; j < square.length; j++) {
-        gridArray.push(square[j].id);
+        localGridArray.push(square[j].id);
     }
+    //Update Grid Array History
+    gridArrayHistory.push(localGridArray);
 }

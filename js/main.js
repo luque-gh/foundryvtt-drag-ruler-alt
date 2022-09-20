@@ -62,7 +62,6 @@ let clearGrid = async () => {
 }
 
 let buildGrid = async (pathArray) => {
-    clearGrid();
     let gridData = [];
     for (var i = 0; i < pathArray.length; i++) {
         let path = pathArray[i];
@@ -83,6 +82,7 @@ let buildGrid = async (pathArray) => {
     for (var j = 0; j < square.length; j++) {
         localGridArray.push(square[j].id);
     }
+    await clearGrid();
     //Update Grid Array History
     gridArrayHistory.push(localGridArray);
 }

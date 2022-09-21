@@ -10,7 +10,8 @@
   "esmodules": [
     "js/main.js",
     "js/util.js",
-    "js/squaregrid.js",
+    "js/squaregridevents.js",
+    "js/squaregridman.js",
     "js/settings.js"
   ],
   "version": "0.0.1",

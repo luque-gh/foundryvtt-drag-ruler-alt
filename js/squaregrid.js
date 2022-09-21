@@ -23,7 +23,7 @@ export class SquareGridManager {
                 fillAlpha: 0.4,
                 fontSize: canvas.grid.grid.w / 3,
                 text: (i + 1) * canvas.scene.grid.distance + canvas.scene.grid.units,
-                shape: {width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE}
+                shape: { width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE }
             });
         }
         let localGridArray = [];

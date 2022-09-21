@@ -1,7 +1,7 @@
 {
   "id": "movement-ruler",
-  "title": "Movement Ruler - Because token speed matters!",
-  "description": "A module created to measure the cost of movement actor.",
+  "title": "Movement Ruler",
+  "description": "Because token speed matters!",
   "authors": [
     {
       "name": "LuqueGh"

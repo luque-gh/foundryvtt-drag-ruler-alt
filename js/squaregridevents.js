@@ -12,7 +12,7 @@ export let onDragLeftStart = async function (wrapped, ...args) {
     waypointArray = [];
     waypointArray.push({ x: origin.x, y: origin.y });
     gridInstanceArray = [];
-    gridInstanceArray.push(new SquareGridManager());
+    gridInstanceArray.push(new SquareGridManager(0));
     lastCoord = { x: origin.x, y: origin.y };
 }
 
@@ -37,15 +37,34 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
     //console.log(game);
     //console.log(canvas.scene);
     waypointArray = [];
-    await gridInstanceArray[gridInstanceArray.length - 1].clearGrid();
+    for (let i = 0; i < gridInstanceArray.length; i++) {
+        await gridInstanceArray[i].clearGrid();
+    }
 }
 
 export let onDragLeftCancel = async function (wrapped, ...args) {
     wrapped(...args);
     waypointArray = [];
-    await gridInstanceArray[gridInstanceArray.length - 1].clearGrid();
+    for (let i = 0; i < gridInstanceArray.length; i++) {
+        await gridInstanceArray[i].clearGrid();
+    }
 }
 
 export let handleCreateWaypoint = () => {
-    //do nothing for now...
+    if (gridInstanceArray.length == 0) {
+        return;
+    }
+    let mouse = canvas.app.renderer.plugins.interaction.mouse;
+    let local = mouse.getLocalPosition(canvas.app.stage);
+    let dest = canvas.grid.getSnappedPosition(local.x - canvas.grid.grid.w / 2, local.y - canvas.grid.grid.h / 2);
+    waypointArray.push({ x: dest.x, y: dest.y });
+    gridInstanceArray.push(new SquareGridManager(gridInstanceArray[gridInstanceArray.length-1].numberOfSteps));
+}
+
+export let handleDeleteWaypoint = () => {
+    if (gridInstanceArray.length <= 1) {
+        return;
+    }
+    waypointArray.pop();
+    gridInstanceArray.pop();
 }

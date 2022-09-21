@@ -6,7 +6,7 @@ Hooks.on("init", function () {
     initializeSettings();
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftStart", onDragLeftStart, "WRAPPER");
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftMove", onDragLeftMove, "WRAPPER");
-    libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "WRAPPER");
+    libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "MIXED");
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftCancel", onDragLeftCancel, "WRAPPER");
 });
 

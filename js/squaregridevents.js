@@ -30,7 +30,19 @@ export let onDragLeftMove = async function (wrapped, ...args) {
 }
 
 export let onDragLeftDrop = async function (wrapped, ...args) {
-    wrapped(...args);
+    if (waypointArray.length <= 1) {
+        await wrapped(...args);
+    } else {
+        let data = args[0].data;
+        let dest = canvas.grid.getSnappedPosition(data.destination.x - canvas.grid.grid.w / 2, data.destination.y - canvas.grid.grid.h / 2);
+        waypointArray.push({ x: dest.x, y: dest.y });
+        let waypointCopy = waypointArray.slice(1);
+        let token = args[0].target;
+        for (let i = 0; i < waypointCopy.length; i++) {
+            await token.scene.updateEmbeddedDocuments(token.constructor.embeddedName, [{x: waypointCopy[i].x, y: waypointCopy[i].y, _id: token.id}]);
+            console.log(waypointCopy[i]);
+        }
+    }
     //let mouse = canvas.app.renderer.plugins.interaction.mouse;
     //let local = mouse.getLocalPosition(canvas.app.stage);
     //console.log("Drag Left Drop", args[0]);
@@ -40,6 +52,7 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
     for (let i = 0; i < gridInstanceArray.length; i++) {
         await gridInstanceArray[i].clearGrid();
     }
+    console.log(args[0].target);
 }
 
 export let onDragLeftCancel = async function (wrapped, ...args) {

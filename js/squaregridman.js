@@ -45,8 +45,9 @@ export class SquareGridManager {
         this._previousPathArray = pathArray;
         let localGridArray = [];
         if (this._gridArrayHistory.length > 0 && commonIndex > 0) {
-            localGridArray = [...this._gridArrayHistory[this._gridArrayHistory.length - 1].slice(0, commonIndex)];
-            this._gridArrayHistory[this._gridArrayHistory.length - 1] = this._gridArrayHistory[this._gridArrayHistory.length - 1].slice(commonIndex);
+            let lastGridArrayHistory = this._gridArrayHistory.pop();
+            this._gridArrayHistory.push(lastGridArrayHistory.slice(commonIndex));
+            localGridArray = [...lastGridArrayHistory.slice(0, commonIndex)];
         }
         let gridData = this._prepareSquareData(pathArray.slice(commonIndex), commonIndex);
         let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);

@@ -19,7 +19,7 @@ export class SquareGridManager {
         }
     }
 
-    async buildGrid(pathArray) {
+    async rebuildGrid(pathArray) {
         this._numberOfSteps = pathArray.length;
         let gridData = this._prepareSquareData(pathArray);
         let localGridArray = [];
@@ -32,7 +32,7 @@ export class SquareGridManager {
         this._gridArrayHistory.push(localGridArray);
     }
 
-    async rebuildGrid(pathArray) {
+    async buildGrid(pathArray) {
         let commonIndex = 0;
         while (commonIndex < this._previousPathArray.length && commonIndex < pathArray.length) {
             let prevPoint = this._previousPathArray[commonIndex];
@@ -43,8 +43,12 @@ export class SquareGridManager {
             commonIndex++;
         }
         this._previousPathArray = pathArray;
-        this._gridArrayHistory[this._gridArrayHistory.length - 1] = this._gridArrayHistory[this._gridArrayHistory.length - 1].slice(commonIndex);
-        let gridData = this._prepareSquareData(pathArray.slice(commonIndex));
+        let localGridArray = [];
+        if (this._gridArrayHistory.length > 0 && commonIndex > 0) {
+            localGridArray = [...this._gridArrayHistory[this._gridArrayHistory.length - 1].slice(0, commonIndex)];
+            this._gridArrayHistory[this._gridArrayHistory.length - 1] = this._gridArrayHistory[this._gridArrayHistory.length - 1].slice(commonIndex);
+        }
+        let gridData = this._prepareSquareData(pathArray.slice(commonIndex), commonIndex);
         let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
         for (let j = 0; j < square.length; j++) {
             localGridArray.push(square[j].id);
@@ -54,7 +58,7 @@ export class SquareGridManager {
         this._gridArrayHistory.push(localGridArray);
     }
 
-    _prepareSquareData(pathArray) {
+    _prepareSquareData(pathArray, offset = 0) {
         let gridData = [];
         for (let i = 0; i < pathArray.length; i++) {
             let path = pathArray[i];
@@ -66,7 +70,7 @@ export class SquareGridManager {
                 fillType: 1,
                 fillAlpha: 0.4,
                 fontSize: canvas.grid.grid.w / 3,
-                text: (i + 1 + this._previousNumberOfSteps) * canvas.scene.grid.distance + canvas.scene.grid.units,
+                text: (i + 1 + this._previousNumberOfSteps + offset) * canvas.scene.grid.distance + canvas.scene.grid.units,
                 shape: { width: canvas.grid.grid.w, height: canvas.grid.grid.h, type: CONST.DRAWING_TYPES.RECTANGLE }
             });
         }

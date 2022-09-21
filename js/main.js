@@ -1,7 +1,8 @@
 import { walkOrthogonalSquareGrid, walkSquareGrid } from "./util.js";
-import { clearGrid, buildGrid } from "./squaregrid.js"
+import { SquareGridManager } from "./squaregrid.js"
 
 var waypointArray;
+var gridInstanceArray;
 var lastCoord;
 
 Hooks.on("init", function () {
@@ -9,10 +10,11 @@ Hooks.on("init", function () {
     let onDragLeftStart = async function (wrapped, ...args) {
         wrapped(...args);
         let data = args[0].data;
-        //console.log("Drag Left Start", data.origin);
-        waypointArray = [];
         let origin = canvas.grid.getSnappedPosition(data.origin.x - canvas.grid.grid.w / 2, data.origin.y - canvas.grid.grid.h / 2);
+        waypointArray = [];
         waypointArray.push({x: origin.x, y: origin.y});
+        gridInstanceArray = [];
+        gridInstanceArray.push(new SquareGridManager());
         lastCoord = {x: origin.x, y: origin.y};
     }
 
@@ -27,7 +29,7 @@ Hooks.on("init", function () {
             lastCoord.x = dest.x;
             lastCoord.y = dest.y;
             let pathArray = walkSquareGrid(origin, dest);
-            await buildGrid(pathArray);
+            await gridInstanceArray[gridInstanceArray.length - 1].buildGrid(pathArray);
         }
     }
 
@@ -42,7 +44,7 @@ Hooks.on("init", function () {
         //console.log(game);
         //console.log(canvas.scene);
         waypointArray = [];
-        await clearGrid();
+        await gridInstanceArray[gridInstanceArray.length - 1].clearGrid();
    }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftDrop", onDragLeftDrop, "WRAPPER");
@@ -50,7 +52,7 @@ Hooks.on("init", function () {
     let onDragLeftCancel = async function(wrapped, ...args) {
         wrapped(...args);
         waypointArray = [];
-        await clearGrid();
+        await gridInstanceArray[gridInstanceArray.length - 1].clearGrid();
     }
 
     libWrapper.register("movement-ruler", "Token.prototype._onDragLeftCancel", onDragLeftCancel, "WRAPPER");    

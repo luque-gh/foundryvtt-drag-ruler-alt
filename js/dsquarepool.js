@@ -6,14 +6,14 @@ export class DrawingSquarePool {
     _used = [];
     //Drawing initial data
     _data = {
-        x: 0,
-        y: 0,
+        x: 2,
+        y: 2,
         fillColor: "#FF0000",
         strokeWidth: 0,
         fillType: 1,
         fillAlpha: 0,
         fontSize: 24,
-        shape: { width: 1, height: 1, type: CONST.DRAWING_TYPES.RECTANGLE }
+        shape: { width: 2, height: 2, type: CONST.DRAWING_TYPES.RECTANGLE }
     };
 
     async grow(size) {
@@ -21,8 +21,8 @@ export class DrawingSquarePool {
         for (let i = 0; i < size; i++) {
             squareData.push(this._data);
         }
-        let list = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
-        _free.push([...list.map(x => x.id)]);
+        let list = await canvas.scene.createEmbeddedDocuments('Drawing', squareData);
+        this._free.push([...list.map(x => x.id)]);
     }
 
     async allocate(size) {

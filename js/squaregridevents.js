@@ -1,9 +1,11 @@
 import { walkOrthogonalSquareGrid, walkSquareGrid } from "./util.js";
 import { SquareGridManager } from "./squaregridman.js"
+import { DrawingSquarePool } from "./dsquarepool.js";
 
 var waypointArray;
 var gridInstanceArray;
 var lastCoord;
+var pool = new DrawingSquarePool();
 
 export let onDragLeftStart = async function (wrapped, ...args) {
     wrapped(...args);
@@ -14,6 +16,7 @@ export let onDragLeftStart = async function (wrapped, ...args) {
     gridInstanceArray = [];
     gridInstanceArray.push(new SquareGridManager(0));
     lastCoord = { x: origin.x, y: origin.y };
+    //pool.grow(20);
 }
 
 export let onDragLeftMove = async function (wrapped, ...args) {
@@ -53,6 +56,7 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
         await gridInstanceArray[i].clearGrid();
     }
     console.log(args[0].target);
+    //pool.destroy();
 }
 
 export let onDragLeftCancel = async function (wrapped, ...args) {
@@ -61,6 +65,7 @@ export let onDragLeftCancel = async function (wrapped, ...args) {
     for (let i = 0; i < gridInstanceArray.length; i++) {
         await gridInstanceArray[i].clearGrid();
     }
+    //pool.destroy();
 }
 
 export let handleCreateWaypoint = () => {

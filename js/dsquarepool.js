@@ -22,7 +22,7 @@ export class DrawingSquarePool {
             squareData.push(this._data);
         }
         let list = await canvas.scene.createEmbeddedDocuments('Drawing', squareData);
-        this._free.push([...list.map(x => x.id)]);
+        this._free.concat(list.map(x => x.id));
     }
 
     async allocate(size) {
@@ -31,7 +31,7 @@ export class DrawingSquarePool {
         }
         let slice = this._free(0, size);
         this._free.slice(size, this._free.length);
-        this._used.push([...slice]);
+        this._used.concat(slice);
     }
 
     async release(id) {

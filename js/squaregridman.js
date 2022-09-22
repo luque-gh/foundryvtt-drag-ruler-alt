@@ -34,6 +34,7 @@ export class SquareGridManager {
     }
 
     async buildGrid(newPathArray) {
+        //Find common path
         let commonIndex = 0;
         while (commonIndex < this._currentPathArray.length && commonIndex < newPathArray.length) {
             let prevPoint = this._currentPathArray[commonIndex];
@@ -45,9 +46,9 @@ export class SquareGridManager {
         }
         this._currentPathArray = newPathArray;
         let localGridArray = [];
-        if (this._gridArrayHistory.length > 0 && commonIndex > 0) {
+        if (this._gridArrayHistory.length > 0) {
             let lastGridArrayHistory = this._gridArrayHistory.pop();
-            this._gridArrayHistory.push(lastGridArrayHistory.slice(commonIndex));
+            await canvas.scene.deleteEmbeddedDocuments('Drawing', lastGridArrayHistory.slice(commonIndex))
             localGridArray = [...lastGridArrayHistory.slice(0, commonIndex)];
         }
         let gridData = this._prepareSquareData(newPathArray.slice(commonIndex), commonIndex);
@@ -55,7 +56,6 @@ export class SquareGridManager {
         for (let j = 0; j < square.length; j++) {
             localGridArray.push(square[j].id);
         }
-        await this.clearGrid();
         //Update Grid Array History
         this._gridArrayHistory.push(localGridArray);
     }

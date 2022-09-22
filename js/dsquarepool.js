@@ -6,14 +6,14 @@ export class DrawingSquarePool {
     _used = [];
     //Drawing initial data
     _data = {
-        x: 2,
-        y: 2,
+        x: 5,
+        y: 5,
         fillColor: "#FF0000",
         strokeWidth: 0,
         fillType: 1,
         fillAlpha: 0,
         fontSize: 24,
-        shape: { width: 2, height: 2, type: CONST.DRAWING_TYPES.RECTANGLE }
+        shape: { width: 10, height: 10, type: CONST.DRAWING_TYPES.RECTANGLE }
     };
 
     async grow(size) {
@@ -22,7 +22,7 @@ export class DrawingSquarePool {
             squareData.push(this._data);
         }
         let list = await canvas.scene.createEmbeddedDocuments('Drawing', squareData);
-        this._free.concat(list.map(x => x.id));
+        this._free = this._free.concat(list.map(x => x.id));
     }
 
     async allocate(size) {
@@ -30,7 +30,7 @@ export class DrawingSquarePool {
             await this.grow(size * 2);
         }
         let slice = this._free(0, size);
-        this._free.slice(size, this._free.length);
+        this._free = this._free.slice(size, this._free.length);
         this._used.concat(slice);
     }
 
@@ -47,10 +47,12 @@ export class DrawingSquarePool {
     }
 
     async destroy() {
-        await canvas.scene.deleteEmbeddedDocuments('Drawing', this._free);
+        let freeCopy = [...this._free];
         this._free = [];
-        await canvas.scene.deleteEmbeddedDocuments('Drawing', this._used);
+        await canvas.scene.deleteEmbeddedDocuments('Drawing', freeCopy);
+        let usedCopy = [...this._used];
         this._used = [];
+        await canvas.scene.deleteEmbeddedDocuments('Drawing', usedCopy);
     }
 }
 

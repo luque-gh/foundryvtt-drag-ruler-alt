@@ -27,7 +27,7 @@ export class DrawingSquarePool {
 
     async allocate(size) {
         if (this._free.length < size) {
-            await this.grow(size * 2);
+            await this.grow(this._used.length + size);
         }
         let slice = this._free(0, size);
         this._free = this._free.slice(size, this._free.length);

@@ -1,15 +1,17 @@
 export class SquareGridManager {
 
-    _numberOfSteps = 0;
+    //Array of set drawing ids
     _gridArrayHistory = [];
+    //Number of steps from previous waypoint
     _previousNumberOfSteps;
-    _previousPathArray = [];
+    //Array of the current path (x,y)
+    _currentPathArray = [];
 
     constructor(previousNumberOfSteps) {
         this._previousNumberOfSteps = previousNumberOfSteps;
     }
 
-    get numberOfSteps() {return this._numberOfSteps + this._previousNumberOfSteps;}
+    get numberOfSteps() {return this._currentPathArray.length + this._previousNumberOfSteps;}
 
     async clearGrid() {
         let gridArrayToDelete = [...this._gridArrayHistory];
@@ -19,9 +21,8 @@ export class SquareGridManager {
         }
     }
 
-    async rebuildGrid(pathArray) {
-        this._numberOfSteps = pathArray.length;
-        let gridData = this._prepareSquareData(pathArray);
+    async rebuildGrid(newPathArray) {
+        let gridData = this._prepareSquareData(newPathArray);
         let localGridArray = [];
         let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
         for (let j = 0; j < square.length; j++) {
@@ -32,24 +33,24 @@ export class SquareGridManager {
         this._gridArrayHistory.push(localGridArray);
     }
 
-    async buildGrid(pathArray) {
+    async buildGrid(newPathArray) {
         let commonIndex = 0;
-        while (commonIndex < this._previousPathArray.length && commonIndex < pathArray.length) {
-            let prevPoint = this._previousPathArray[commonIndex];
-            let point = pathArray[commonIndex];
+        while (commonIndex < this._currentPathArray.length && commonIndex < newPathArray.length) {
+            let prevPoint = this._currentPathArray[commonIndex];
+            let point = newPathArray[commonIndex];
             if (point.x != prevPoint.x || point.y != prevPoint.y) {
                 break;
             }
             commonIndex++;
         }
-        this._previousPathArray = pathArray;
+        this._currentPathArray = newPathArray;
         let localGridArray = [];
         if (this._gridArrayHistory.length > 0 && commonIndex > 0) {
             let lastGridArrayHistory = this._gridArrayHistory.pop();
             this._gridArrayHistory.push(lastGridArrayHistory.slice(commonIndex));
             localGridArray = [...lastGridArrayHistory.slice(0, commonIndex)];
         }
-        let gridData = this._prepareSquareData(pathArray.slice(commonIndex), commonIndex);
+        let gridData = this._prepareSquareData(newPathArray.slice(commonIndex), commonIndex);
         let square = await canvas.scene.createEmbeddedDocuments('Drawing', gridData);
         for (let j = 0; j < square.length; j++) {
             localGridArray.push(square[j].id);

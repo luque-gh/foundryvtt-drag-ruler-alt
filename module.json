@@ -12,7 +12,8 @@
     "js/util.js",
     "js/squaregridevents.js",
     "js/squaregridman.js",
-    "js/settings.js"
+    "js/settings.js",
+    "js/dsquarepool.js"
   ],
   "version": "0.0.1",
   "compatibility": {

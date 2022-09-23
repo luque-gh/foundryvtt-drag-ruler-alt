@@ -29,9 +29,10 @@ export class DrawingSquarePool {
         if (this._free.length < size) {
             await this.grow(this._used.length + size);
         }
-        let slice = this._free(0, size);
+        let slice = this._free.slice(0, size);
         this._free = this._free.slice(size, this._free.length);
         this._used = this._used.concat(slice);
+        return slice;
     }
 
     async release(id) {

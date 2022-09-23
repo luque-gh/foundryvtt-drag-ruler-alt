@@ -60,6 +60,37 @@ export class SquareGridManager {
         this._gridArrayHistory.push(localGridArray);
     }
 
+    async optimalBuild(newPathArray, pool) {
+        //Find common path
+        let commonIndex = 0;
+        while (commonIndex < this._currentPathArray.length && commonIndex < newPathArray.length) {
+            let prevPoint = this._currentPathArray[commonIndex];
+            let point = newPathArray[commonIndex];
+            if (point.x != prevPoint.x || point.y != prevPoint.y) {
+                break;
+            }
+            commonIndex++;
+        }
+        //Release all useless ids...
+        for (let i = commonIndex; i < this._currentPathArray.length; i++) {
+            pool.release(this._currentPathArray.id);
+        }
+        //Copy ids from common path...
+        for (let i = 0; i < commonIndex; i++) {
+            newPathArray[i].id = this._currentPathArray.id;
+        }
+        //Set new path
+        this._currentPathArray = newPathArray;
+        //Prepare data to update ids...
+        let pathToBuild = this._currentPathArray.slice(commonIndex);
+        let gridId = await pool.allocate(pathToBuild.length);
+        let gridData = this._prepareSquareData(pathToBuild, commonIndex);
+        for (let i = 0; i < gridData.length; i++) {
+            gridData[i] = {...gridData[i], _id: gridId[i]};
+        }
+        canvas.scene.updateEmbeddedDocuments('Drawing', gridData);
+    }
+
     _prepareSquareData(pathArray, offset = 0) {
         let gridData = [];
         for (let i = 0; i < pathArray.length; i++) {

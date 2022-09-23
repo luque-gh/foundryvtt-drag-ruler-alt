@@ -29,7 +29,7 @@ export let onDragLeftMove = async function (wrapped, ...args) {
         lastCoord.x = dest.x;
         lastCoord.y = dest.y;
         let pathArray = walkSquareGrid(origin, dest);
-        await gridInstanceArray[gridInstanceArray.length - 1].optimalBuild(pathArray, pool);
+        await gridInstanceArray[gridInstanceArray.length - 1].build(pathArray, pool);
     }
 }
 
@@ -53,9 +53,6 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
     //console.log(game);
     //console.log(canvas.scene);
     waypointArray = [];
-    for (let i = 0; i < gridInstanceArray.length; i++) {
-        await gridInstanceArray[i].clearGrid();
-    }
     console.log(args[0].target);
     pool.destroy();
 }
@@ -63,9 +60,6 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
 export let onDragLeftCancel = async function (wrapped, ...args) {
     wrapped(...args);
     waypointArray = [];
-    for (let i = 0; i < gridInstanceArray.length; i++) {
-        await gridInstanceArray[i].clearGrid();
-    }
     pool.destroy();
 }
 

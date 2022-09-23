@@ -6,6 +6,10 @@ export class SquareGridManager {
     _currentPathArray = [];
     //Avoid race condition
     _lock = false;
+    //Awaiting for timeout to retry
+    _timeout = false;
+    //Locked path
+    _lockedPathArray = null;
 
     constructor(previousNumberOfSteps) {
         this._previousNumberOfSteps = previousNumberOfSteps;
@@ -15,7 +19,12 @@ export class SquareGridManager {
 
     async build(newPathArray, pool) {
         if (this._lock) {
-            //If locked, ignore
+            //If locked, wait for the right time...
+            this._lockedPathArray = newPathArray;
+            if (!this._timeout) {
+                this._timeout = true;
+                setTimeout(() => {this._retry(pool);}, 200);
+            }
             return;
         }
         //Lock to avoid race condition
@@ -51,6 +60,15 @@ export class SquareGridManager {
         await canvas.scene.updateEmbeddedDocuments('Drawing', gridData);
         //Release lock
         this._lock = false;
+    }
+
+    async _retry(pool) {
+        this._timeout = false;
+        if (this._lockedPathArray != null) {
+            let newPathArray = [...this._lockedPathArray];
+            this._lockedPathArray = null;
+            this.build(newPathArray, pool);
+        }
     }
 
     _prepareSquareData(pathArray, offset = 0) {

@@ -38,9 +38,9 @@ export class DrawingSquarePool {
     async release(id) {
         for (let i = 0; i < this._used.length; i++) {
             if (this._used[i] == id) {
-                this._used = this._used.splice(i,1);
+                this._used.splice(i,1);
                 let data = {...this._data, _id: id};
-                await canvas.scene.updateEmbeddedDocuments('Drawing', data);
+                await canvas.scene.updateEmbeddedDocuments('Drawing', [data]);
                 this._free.push(id);
                 break;
             }

@@ -73,11 +73,11 @@ export class SquareGridManager {
         }
         //Release all useless ids...
         for (let i = commonIndex; i < this._currentPathArray.length; i++) {
-            pool.release(this._currentPathArray.id);
+            pool.release(this._currentPathArray[i].id);
         }
         //Copy ids from common path...
         for (let i = 0; i < commonIndex; i++) {
-            newPathArray[i].id = this._currentPathArray.id;
+            newPathArray[i].id = this._currentPathArray[i].id;
         }
         //Set new path
         this._currentPathArray = newPathArray;
@@ -86,9 +86,11 @@ export class SquareGridManager {
         let gridId = await pool.allocate(pathToBuild.length);
         let gridData = this._prepareSquareData(pathToBuild, commonIndex);
         for (let i = 0; i < gridData.length; i++) {
+            this._currentPathArray[commonIndex + i].id = gridId[i];
             gridData[i] = {...gridData[i], _id: gridId[i]};
         }
         canvas.scene.updateEmbeddedDocuments('Drawing', gridData);
+        console.log(this._currentPathArray);
     }
 
     _prepareSquareData(pathArray, offset = 0) {

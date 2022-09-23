@@ -23,7 +23,8 @@ export class SquareGridManager {
             this._waitingPathArray = newPathArray;
             if (!this._timeout) {
                 this._timeout = true;
-                setTimeout(() => {this._retry(pool);}, 200);
+                //Yield...
+                setTimeout(() => {this._retry(pool);}, 0);
             }
             return;
         }

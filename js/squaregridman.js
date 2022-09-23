@@ -8,8 +8,8 @@ export class SquareGridManager {
     _lock = false;
     //Awaiting for timeout to retry
     _timeout = false;
-    //Locked path
-    _lockedPathArray = null;
+    //Path waiting to update rule
+    _waitingPathArray = null;
 
     constructor(previousNumberOfSteps) {
         this._previousNumberOfSteps = previousNumberOfSteps;
@@ -20,7 +20,7 @@ export class SquareGridManager {
     async build(newPathArray, pool) {
         if (this._lock) {
             //If locked, wait for the right time...
-            this._lockedPathArray = newPathArray;
+            this._waitingPathArray = newPathArray;
             if (!this._timeout) {
                 this._timeout = true;
                 setTimeout(() => {this._retry(pool);}, 200);
@@ -64,9 +64,9 @@ export class SquareGridManager {
 
     async _retry(pool) {
         this._timeout = false;
-        if (this._lockedPathArray != null) {
-            let newPathArray = [...this._lockedPathArray];
-            this._lockedPathArray = null;
+        if (this._waitingPathArray != null) {
+            let newPathArray = [...this._waitingPathArray];
+            this._waitingPathArray = null;
             this.build(newPathArray, pool);
         }
     }

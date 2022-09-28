@@ -20,23 +20,30 @@ export class SquareGridManager {
     get numberOfSteps() {return this._currentPathArray.length + this._previousNumberOfSteps;}
 
     async build(newPathArray, pool, callTime) {
-        if (this._lock) {
-            if (callTime <= this._lastCallTime) {
-                return;
-            }
-            //If locked, wait for the right time...
-            this._lastCallTime = callTime;
-            this._waitingPathArray = newPathArray;
-            if (!this._timeout) {
-                this._timeout = true;
-                //Yield...
-                setTimeout(() => {this._retry(pool);}, 0);
-            }
+        if (callTime <= this._lastCallTime) {
             return;
         }
+        //If locked, wait for the right time...
         this._lastCallTime = callTime;
+        this._waitingPathArray = newPathArray;
+        if (!this._timeout) {
+            this._timeout = true;
+            //Yield...
+            setTimeout(() => {this._build(pool);}, 0);
+        }
+    }
+
+    async _build(pool) {
+        this._timeout = false;
+        if (this._lock) {
+            this._timeout = true;
+            //Yield...
+            setTimeout(() => {this._build(pool);}, 0);
+            return;
+        }
         //Lock to avoid race condition
         this._lock = true;
+        let newPathArray = [...this._waitingPathArray];
         //Find common path
         let commonIndex = 0;
         while (commonIndex < this._currentPathArray.length && commonIndex < newPathArray.length) {
@@ -68,15 +75,6 @@ export class SquareGridManager {
         await canvas.scene.updateEmbeddedDocuments('Drawing', gridData);
         //Release lock
         this._lock = false;
-    }
-
-    async _retry(pool) {
-        this._timeout = false;
-        if (this._waitingPathArray != null) {
-            let newPathArray = [...this._waitingPathArray];
-            this._waitingPathArray = null;
-            this.build(newPathArray, pool);
-        }
     }
 
     _prepareSquareData(pathArray, offset = 0) {

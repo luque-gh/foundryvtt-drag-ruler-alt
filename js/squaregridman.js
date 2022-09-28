@@ -10,6 +10,8 @@ export class SquareGridManager {
     _timeout = false;
     //Path waiting to update rule
     _waitingPathArray = null;
+    //Last call time 
+    _lastCallTime = new Date().getTime();
 
     constructor(previousNumberOfSteps) {
         this._previousNumberOfSteps = previousNumberOfSteps;
@@ -17,9 +19,13 @@ export class SquareGridManager {
 
     get numberOfSteps() {return this._currentPathArray.length + this._previousNumberOfSteps;}
 
-    async build(newPathArray, pool) {
+    async build(newPathArray, pool, callTime) {
         if (this._lock) {
+            if (callTime <= this._lastCallTime) {
+                return;
+            }
             //If locked, wait for the right time...
+            this._lastCallTime = callTime;
             this._waitingPathArray = newPathArray;
             if (!this._timeout) {
                 this._timeout = true;
@@ -28,6 +34,7 @@ export class SquareGridManager {
             }
             return;
         }
+        this._lastCallTime = callTime;
         //Lock to avoid race condition
         this._lock = true;
         //Find common path

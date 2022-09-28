@@ -29,7 +29,7 @@ export let onDragLeftMove = async function (wrapped, ...args) {
         lastCoord.x = dest.x;
         lastCoord.y = dest.y;
         let pathArray = walkSquareGrid(origin, dest);
-        await gridInstanceArray[gridInstanceArray.length - 1].build(pathArray, pool);
+        await gridInstanceArray[gridInstanceArray.length - 1].build(pathArray, pool, new Date().getTime());
     }
 }
 

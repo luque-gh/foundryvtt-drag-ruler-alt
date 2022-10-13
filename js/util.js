@@ -1,3 +1,7 @@
+export let sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export let walkOrthogonalSquareGrid = (from, to) => {
     //let vector = {x: to.x - from.x, y: to.y - from.y};
     let path = [];

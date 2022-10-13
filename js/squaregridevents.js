@@ -1,4 +1,4 @@
-import { walkOrthogonalSquareGrid, walkSquareGrid } from "./util.js";
+import { sleep, walkSquareGrid } from "./util.js";
 import { SquareGridManager } from "./squaregridman.js"
 import { DrawingSquarePool } from "./dsquarepool.js";
 
@@ -42,9 +42,15 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
         waypointArray.push({ x: dest.x, y: dest.y });
         let waypointCopy = waypointArray.slice(1);
         let token = args[0].target;
+        console.log(token);
         for (let i = 0; i < waypointCopy.length; i++) {
             await token.scene.updateEmbeddedDocuments(token.constructor.embeddedName, [{x: waypointCopy[i].x, y: waypointCopy[i].y, _id: token.id}]);
-            console.log(waypointCopy[i]);
+            let last;
+            do {
+                last = {x: token._original.x, y: token._original.y};
+                await sleep(30);
+            }
+            while ((last.x != token._original.x) || (last.y != token._original.y));
         }
     }
     //let mouse = canvas.app.renderer.plugins.interaction.mouse;
@@ -53,7 +59,6 @@ export let onDragLeftDrop = async function (wrapped, ...args) {
     //console.log(game);
     //console.log(canvas.scene);
     waypointArray = [];
-    console.log(args[0].target);
     pool.destroy();
 }
 

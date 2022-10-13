@@ -17,7 +17,7 @@ export let onDragLeftStart = async function (wrapped, ...args) {
     gridInstanceArray.push(new SquareGridManager(0));
     lastCoord = { x: origin.x, y: origin.y };
     pool = new DrawingSquarePool();
-    pool.grow(20);
+    pool.grow(10);
 }
 
 export let onDragLeftMove = async function (wrapped, ...args) {
